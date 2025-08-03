@@ -1,89 +1,36 @@
-# 🧪 Developer Technical Test – Product List App
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## 🧩 Goal
+## Getting Started
 
-Build a simple fullstack **Next.js** app (frontend + backend) to manage a personal product list.
+First, run the development server:
 
----
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## 📋 Features
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- ✅ Login with **email only** (no password)
-- ✅ Add products with:
-  - `product name`
-  - `amount`
-  - `comment`
-- ✅ View, edit, delete, and reorder product list (inline editing)
-- ✅ Each email sees only their own items
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
----
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## ⚙️ Technical Requirements
+## Learn More
 
-### 🗂️ Folder Structure
+To learn more about Next.js, take a look at the following resources:
 
-- `pages` → Next.js routing. Keep it just a reference to the screen folder
-````
-      import LoginPage from '../src/screen/auth/login.page';
-      
-      export default function Login() {
-        return <LoginPage />;
-      }
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-`````
-- `screens` → A folder for sets of screens (e.g. todo list), can contain subfolders for subcomponents
-- `layout` → General UI components with all styling (buttons, inputs, texts, labels). No CSS in `screens`, only layout components use Tailwind or style
-- `service` → Fetch layer (frontend)
-- `config` → Configuration files
-- `api` → API logic that checks authentication and handles errors (e.g. item not found)
-- `service` → Backend logic between `api` and database
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-### 📌 Component Constraints
+## Deploy on Vercel
 
-- Avoid multiple `useCallback` or `useEffect` per component — if needed, split into subcomponents
-- Keep components **dry**, **simple**, and **small**
-- ❌ No `try-catch` in screen or layout components
-- ❌ Avoid deeply nested or complex `if-else` logic
-- ✅ Only layout components should contain CSS or Tailwind classes
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-### 📁 File Naming Convention
-
-- All filenames in lowercase
-- Format:
-  - `todo-list.adapter.ts`
-  - `button.layout.ts`
-  - `main.page.ts`
-
----
-
-## 🔁 Workflow
-
-1. Fork this repository  
-2. Work on your fork (commit regularly)  
-3. When finished, open a **Pull Request (PR)** back to the original repo  
-4. Use a meaningful title and clear commit history  
-5. Use **semantic commits** (e.g. `feat:`, `fix:`, `refactor:`)
-
----
-
-## 🚀 Submission Checklist
-
-- ✅ Code pushed to your GitHub fork  
-- ✅ PR opened to the base repo  
-- ✅ Live demo deployed to **Vercel** or **Netlify**  
-- ✅ Short `README.md` with:
-  - Local setup instructions (`npm install && npm run dev`)
-  - Basic explanation of how login works
-
----
-
-## 🧪 Evaluation Phases
-
-1. Initial Delivery – core implementation review  
-2. Follow-up Feedback Simulation – you’ll be asked to implement 1–2 improvements (e.g. sorting, analytics)
-
----
-
-## ⏱️ Estimated Time
-
-~8 hours. Keep it simple but clean.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
