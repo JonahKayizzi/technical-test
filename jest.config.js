@@ -1,14 +1,14 @@
-const nextJest = require('next/jest')
+const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({
   dir: './',
-})
+});
 
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   collectCoverageFrom: [
@@ -16,6 +16,6 @@ const customJestConfig = {
     '!src/**/*.d.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
   ],
-}
+};
 
-module.exports = createJestConfig(customJestConfig)
+module.exports = createJestConfig(customJestConfig);
