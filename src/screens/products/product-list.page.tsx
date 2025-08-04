@@ -7,7 +7,7 @@ import {
   useDeleteProductMutation,
   type Product,
 } from '@/service/products.service';
-import { useLogoutMutation } from '@/service/auth.service';
+import { useLogoutMutation, useVerifySessionQuery } from '@/service/auth.service';
 import Card from '@/layout/card.layout';
 import Button from '@/layout/button.layout';
 import Modal from '@/layout/modal.layout';
@@ -25,6 +25,7 @@ const ProductListPage: React.FC = () => {
 
   const { data: products, isLoading, error } = useGetProductsQuery();
   const productList = Array.isArray(products) ? products : [];
+  const { data: session } = useVerifySessionQuery();
   const [reorderProducts] = useReorderProductsMutation();
   const [deleteProductMutation] = useDeleteProductMutation();
   const [logout] = useLogoutMutation();
@@ -98,9 +99,16 @@ const ProductListPage: React.FC = () => {
       <div className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900">
-              My Product List
-            </h1>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                My Product List
+              </h1>
+              {session?.user?.email && (
+                <p className="text-sm text-gray-600 mt-1">
+                  Welcome, {session.user.email}
+                </p>
+              )}
+            </div>
             <div className="flex items-center space-x-4">
               <Button onClick={() => setIsAddModalOpen(true)}>
                 Add Product
