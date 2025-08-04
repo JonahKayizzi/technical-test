@@ -89,14 +89,14 @@
 
 ### Key Features <a name="key-features"></a>
 
-- **🔐 Email-based Authentication** - Simple login with email only
-- **📝 Product Management** - Add, edit, delete products with validation
-- **🔄 Reorder Products** - Drag and drop functionality for product reordering
-- **💾 File-based Storage** - Persistent storage that survives server restarts (local development)
-- **📱 Responsive Design** - Works seamlessly on desktop and mobile
-- **🧪 Comprehensive Testing** - 136+ tests covering components and API
-- **⚡ Real-time Updates** - RTK Query for efficient data fetching and caching
-- **🎨 Modern UI** - Clean, accessible interface with Tailwind CSS
+- ** Email-based Authentication** - Simple login with email only
+- ** Product Management** - Add, edit, delete products with validation
+- ** Reorder Products** - Drag and drop functionality for product reordering
+- ** File-based Storage** - Persistent storage that survives server restarts (local development)
+- ** Responsive Design** - Works seamlessly on desktop and mobile
+- ** Comprehensive Testing** - 136+ tests covering components and API
+- ** Real-time Updates** - RTK Query for efficient data fetching and caching
+- ** Modern UI** - Clean, accessible interface with Tailwind CSS
 
 ### 🚀 Live Demo <a name="live-demo"></a>
 
@@ -139,7 +139,7 @@ Clone this repository to your desired folder:
 ```sh
   cd my-folder
   git clone https://github.com/JonahKayizzi/technical-test.git
-  cd product-list-app
+  cd technical-test
 ```
 
 ### Install
@@ -222,9 +222,9 @@ For deployment platforms like Vercel, Netlify, or Railway, the build process is 
 
 👤 **Jonathan Kayizzi**
 
-- GitHub: [@your-username](https://github.com/JonahKayizzi)
-- Twitter: [@your-twitter](https://twitter.com/JonahKayizzi)
-- LinkedIn: [@your-linkedin](https://www.linkedin.com/in/jonathan-kayizzi/)
+- GitHub: [@JonahKayizzi](https://github.com/JonahKayizzi)
+- Twitter: [@JonahKayizzi](https://twitter.com/JonahKayizzi)
+- LinkedIn: [@JonahKayizzi](https://www.linkedin.com/in/jonathan-kayizzi/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
