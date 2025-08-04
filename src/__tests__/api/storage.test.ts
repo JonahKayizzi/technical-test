@@ -123,7 +123,9 @@ describe('Storage Functions', () => {
 
     it('should return null when product not found', async () => {
       await writeProducts(mockProducts);
-      const result = await updateProduct('product_nonexistent', { name: 'Updated' });
+      const result = await updateProduct('product_nonexistent', {
+        name: 'Updated',
+      });
       expect(result).toBeNull();
     });
 
