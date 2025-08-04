@@ -7,7 +7,10 @@ import {
   useDeleteProductMutation,
   type Product,
 } from '@/service/products.service';
-import { useLogoutMutation, useVerifySessionQuery } from '@/service/auth.service';
+import {
+  useLogoutMutation,
+  useVerifySessionQuery,
+} from '@/service/auth.service';
 import Card from '@/layout/card.layout';
 import Button from '@/layout/button.layout';
 import Modal from '@/layout/modal.layout';

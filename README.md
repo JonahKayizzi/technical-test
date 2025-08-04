@@ -39,6 +39,7 @@
 **Product List Management App** is a fullstack Next.js application that allows users to manage their personal product lists with email-based authentication. Users can add, edit, delete, and reorder products with a modern, responsive interface.
 
 ## 🛠 Built With <a name="built-with"></a>
+
 - Next.js 15
 - TypeScript
 - Tailwind CSS
@@ -133,7 +134,7 @@ To get a local copy up and running, follow these steps.
 In order to run this project you need:
 
 ```sh
- Node.js 18+ 
+ Node.js 18+
  npm or yarn
  Git
 ```
