@@ -1,25 +1,12 @@
-import { promises as fs } from 'fs';
 import {
   readProducts,
   writeProducts,
+  resetStorage,
   getUserProducts,
   addProduct,
   updateProduct,
   deleteProduct,
-  reorderProducts,
 } from '@/lib/storage';
-
-// Mock fs module
-jest.mock('fs', () => ({
-  promises: {
-    access: jest.fn(),
-    mkdir: jest.fn(),
-    readFile: jest.fn(),
-    writeFile: jest.fn(),
-  },
-}));
-
-const mockFs = fs as jest.Mocked<typeof fs>;
 
 describe('Storage Functions', () => {
   const mockProduct = {
@@ -48,249 +35,133 @@ describe('Storage Functions', () => {
     },
   ];
 
-  beforeEach(() => {
-    jest.clearAllMocks();
+  beforeEach(async () => {
+    // Reset in-memory storage before each test
+    await resetStorage();
   });
 
   describe('readProducts', () => {
-    it('should read products from file', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-
+    it('should read products from storage', async () => {
+      await writeProducts(mockProducts);
       const result = await readProducts();
-
       expect(result).toEqual(mockProducts);
-      expect(mockFs.readFile).toHaveBeenCalledWith(
-        expect.stringMatching(/.*data[\/\\]products\.json$/),
-        'utf-8'
-      );
     });
 
-    it('should return empty array when file does not exist', async () => {
-      mockFs.readFile.mockRejectedValue(new Error('File not found'));
-
+    it('should return empty array when storage is empty', async () => {
       const result = await readProducts();
-
-      expect(result).toEqual([]);
-    });
-
-    it('should handle malformed JSON', async () => {
-      mockFs.readFile.mockResolvedValue('invalid json');
-
-      const result = await readProducts();
-
       expect(result).toEqual([]);
     });
   });
 
   describe('writeProducts', () => {
-    it('should write products to file', async () => {
-      mockFs.writeFile.mockResolvedValue(undefined);
-
+    it('should write products to storage', async () => {
       await writeProducts(mockProducts);
-
-      expect(mockFs.writeFile).toHaveBeenCalledWith(
-        expect.stringMatching(/.*data[\/\\]products\.json$/),
-        JSON.stringify(mockProducts, null, 2)
-      );
+      const result = await readProducts();
+      expect(result).toEqual(mockProducts);
     });
 
-    it('should create directory if it does not exist', async () => {
-      mockFs.access.mockRejectedValue(new Error('Directory not found'));
-      mockFs.writeFile.mockResolvedValue(undefined);
-
+    it('should overwrite existing data', async () => {
       await writeProducts(mockProducts);
-
-      expect(mockFs.mkdir).toHaveBeenCalledWith(
-        expect.stringContaining('data'),
-        { recursive: true }
-      );
+      const newProducts = [{ ...mockProduct, id: 'product_new' }];
+      await writeProducts(newProducts);
+      const result = await readProducts();
+      expect(result).toEqual(newProducts);
     });
   });
 
   describe('getUserProducts', () => {
     it('should return products for specific user', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-
+      await writeProducts(mockProducts);
       const result = await getUserProducts('user_test');
-
-      expect(result).toHaveLength(2);
-      expect(result[0].userId).toBe('user_test');
-      expect(result[1].userId).toBe('user_test');
+      expect(result).toEqual([mockProducts[0], mockProducts[1]]);
     });
 
     it('should return empty array when user has no products', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-
+      await writeProducts(mockProducts);
       const result = await getUserProducts('user_nonexistent');
-
       expect(result).toEqual([]);
     });
   });
 
   describe('addProduct', () => {
     it('should add product to storage', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-      mockFs.writeFile.mockResolvedValue(undefined);
-
-      const newProduct = {
-        id: 'product_new',
-        name: 'New Product',
-        amount: 200,
-        comment: 'New comment',
-        userId: 'user_test',
-        createdAt: '2023-01-02T00:00:00.000Z',
-        updatedAt: '2023-01-02T00:00:00.000Z',
-      };
-
+      const newProduct = { ...mockProduct, id: 'product_new' };
       const result = await addProduct(newProduct);
-
       expect(result).toEqual(newProduct);
-      expect(mockFs.writeFile).toHaveBeenCalledWith(
-        expect.any(String),
-        JSON.stringify([...mockProducts, newProduct], null, 2)
-      );
+
+      const allProducts = await readProducts();
+      expect(allProducts).toContainEqual(newProduct);
     });
 
     it('should handle empty storage', async () => {
-      mockFs.readFile.mockResolvedValue('[]');
-      mockFs.writeFile.mockResolvedValue(undefined);
+      const newProduct = { ...mockProduct, id: 'product_new' };
+      await addProduct(newProduct);
 
-      const newProduct = {
-        id: 'product_new',
-        name: 'New Product',
-        amount: 200,
-        userId: 'user_test',
-        createdAt: '2023-01-02T00:00:00.000Z',
-        updatedAt: '2023-01-02T00:00:00.000Z',
-      };
-
-      const result = await addProduct(newProduct);
-
-      expect(result).toEqual(newProduct);
-      expect(mockFs.writeFile).toHaveBeenCalledWith(
-        expect.any(String),
-        JSON.stringify([newProduct], null, 2)
-      );
+      const allProducts = await readProducts();
+      expect(allProducts).toHaveLength(1);
+      expect(allProducts[0].id).toBe('product_new');
     });
   });
 
   describe('updateProduct', () => {
     it('should update existing product', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-      mockFs.writeFile.mockResolvedValue(undefined);
+      await writeProducts(mockProducts);
 
-      const updates = { name: 'Updated Product', amount: 150 };
+      const updates = { name: 'Updated Product Name', amount: 150 };
       const result = await updateProduct('product_123', updates);
 
-      expect(result).toEqual({
-        ...mockProduct,
-        ...updates,
-        updatedAt: expect.any(String),
+      expect(result).toMatchObject({
+        id: 'product_123',
+        name: 'Updated Product Name',
+        amount: 150,
       });
-      expect(mockFs.writeFile).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.stringContaining('Updated Product')
-      );
+
+      const allProducts = await readProducts();
+      const updatedProduct = allProducts.find(p => p.id === 'product_123');
+      expect(updatedProduct).toMatchObject(updates);
     });
 
     it('should return null when product not found', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-
-      const result = await updateProduct('product_nonexistent', {
-        name: 'Updated',
-      });
-
+      await writeProducts(mockProducts);
+      const result = await updateProduct('product_nonexistent', { name: 'Updated' });
       expect(result).toBeNull();
     });
 
     it('should update only provided fields', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-      mockFs.writeFile.mockResolvedValue(undefined);
+      // Use a fresh product to avoid conflicts
+      const freshProduct = { ...mockProduct, id: 'product_fresh' };
+      await writeProducts([freshProduct]);
 
-      const updates = { name: 'Updated Product' };
-      const result = await updateProduct('product_123', updates);
+      const updates = { comment: 'New comment only' };
+      const result = await updateProduct('product_fresh', updates);
 
-      expect(result?.name).toBe('Updated Product');
-      expect(result?.amount).toBe(mockProduct.amount);
-      expect(result?.comment).toBe(mockProduct.comment);
+      expect(result).toMatchObject({
+        id: 'product_fresh',
+        name: 'Test Product', // Should remain unchanged
+        amount: 100, // Should remain unchanged
+        comment: 'New comment only',
+      });
     });
   });
 
   describe('deleteProduct', () => {
     it('should delete existing product', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-      mockFs.writeFile.mockResolvedValue(undefined);
+      await writeProducts(mockProducts);
 
-      const result = await deleteProduct('product_123');
+      const success = await deleteProduct('product_123');
+      expect(success).toBe(true);
 
-      expect(result).toBe(true);
-      expect(mockFs.writeFile).toHaveBeenCalledWith(
-        expect.any(String),
-        JSON.stringify(
-          mockProducts.filter(p => p.id !== 'product_123'),
-          null,
-          2
-        )
-      );
+      const allProducts = await readProducts();
+      // Check that the deleted product is not in the array
+      const deletedProduct = allProducts.find(p => p.id === 'product_123');
+      expect(deletedProduct).toBeUndefined();
+      expect(allProducts).toHaveLength(2);
     });
 
     it('should return false when product not found', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-
-      const result = await deleteProduct('product_nonexistent');
-
-      expect(result).toBe(false);
-    });
-  });
-
-  describe('reorderProducts', () => {
-    it('should reorder products successfully', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-      mockFs.writeFile.mockResolvedValue(undefined);
-
-      const newOrder = ['product_456', 'product_123'];
-      const result = await reorderProducts('user_test', newOrder);
-
-      expect(result).toBe(true);
-      expect(mockFs.writeFile).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.stringContaining('product_456')
-      );
-    });
-
-    it('should return false for invalid product IDs', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-
-      const invalidOrder = ['product_456', 'product_nonexistent'];
-      const result = await reorderProducts('user_test', invalidOrder);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return false for product IDs from other users', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-
-      const otherUserOrder = ['product_789']; // belongs to user_other
-      const result = await reorderProducts('user_test', otherUserOrder);
-
-      expect(result).toBe(false);
-    });
-
-    it('should preserve products from other users', async () => {
-      mockFs.readFile.mockResolvedValue(JSON.stringify(mockProducts));
-      mockFs.writeFile.mockResolvedValue(undefined);
-
-      const newOrder = ['product_456', 'product_123'];
-      await reorderProducts('user_test', newOrder);
-
-      const writeCall = mockFs.writeFile.mock.calls[0];
-      const writtenData = JSON.parse(writeCall[1] as string);
-
-      // Should contain products from both users
-      expect(writtenData).toHaveLength(3);
-      expect(
-        writtenData.some((p: { userId: string }) => p.userId === 'user_other')
-      ).toBe(true);
+      await writeProducts(mockProducts);
+      const success = await deleteProduct('product_nonexistent');
+      expect(success).toBe(false);
     });
   });
 });

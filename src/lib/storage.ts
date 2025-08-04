@@ -19,6 +19,11 @@ export async function writeProducts(products: Product[]): Promise<void> {
   productsStorage = products;
 }
 
+// Reset function for testing
+export async function resetStorage(): Promise<void> {
+  productsStorage = [];
+}
+
 export async function getUserProducts(userId: string): Promise<Product[]> {
   const products = await readProducts();
   return products.filter(product => product.userId === userId);
