@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from "react";
 
 interface InputProps {
@@ -46,7 +48,6 @@ const Input: React.FC<InputProps> = ({
 }) => {
 
     const [internalError, setInternalError] = useState<string>('')
-    const [touched, setTouched] = useState(false)
 
     const baseClasses = 'appearance-none rounded-md relative block w-full px-3 py-2 border placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:z-10 sm:text-sm'
     const borderClasses = (error || internalError) ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
@@ -102,7 +103,7 @@ const Input: React.FC<InputProps> = ({
         const newValue = e.target.value
         onChange?.(e)
 
-        if (validateOnChange && touched) {
+        if (validateOnChange) {
             const validationError = validateField(newValue)
             setInternalError(validationError)
         }

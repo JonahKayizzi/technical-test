@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Input from '@/layout/input.layout'
@@ -18,7 +20,7 @@ const LoginPage: React.FC = () => {
         }
     }, [session, router])
 
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setEmail(e.target.value)
         setEmailError('')
     }
@@ -46,8 +48,11 @@ const LoginPage: React.FC = () => {
         try {
             await login({ email }).unwrap()
             router.push('/products')
-        } catch (error: any) {
-            setEmailError(error.data?.error || 'Login failed. Please try again.')
+        } catch (error: unknown) {
+            const errorMessage = error && typeof error === 'object' && 'data' in error
+                ? (error.data as { error?: string })?.error || 'Login failed. Please try again.'
+                : 'Login failed. Please try again.'
+            setEmailError(errorMessage)
         }
     }
 

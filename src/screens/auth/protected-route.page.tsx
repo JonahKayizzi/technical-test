@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useVerifySessionQuery } from '@/service/auth.service'
 import Loading from '@/layout/loading.layout'
@@ -15,6 +17,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     const router = useRouter()
     const { data: session, isLoading, error } = useVerifySessionQuery()
 
+    useEffect(() => {
+        if (error || !session?.user) {
+            router.push('/login')
+        }
+    }, [error, session, router])
+
     if (isLoading) {
         return fallback || (
             <div className="min-h-screen flex items-center justify-center">
@@ -24,7 +32,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     }
 
     if (error || !session?.user) {
-        router.push('/login')
         return null
     }
 

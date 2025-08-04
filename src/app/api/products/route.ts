@@ -1,16 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-interface Product {
-  id: string;
-  name: string;
-  amount: number;
-  comment: string;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const products: Product[] = [];
+import { getUserProducts, addProduct } from '@/lib/storage';
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,9 +15,9 @@ export async function GET(request: NextRequest) {
     }
 
     const user = JSON.parse(session.value);
-    const userProducts = products.filter(product => product.userId === user.id);
+    const userProducts = await getUserProducts(user.id);
 
-    return NextResponse.json({ products: userProducts });
+    return NextResponse.json(userProducts);
   } catch {
     return NextResponse.json(
       {
@@ -65,9 +54,9 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date().toISOString(),
     };
 
-    products.push(product);
+    const savedProduct = await addProduct(product);
 
-    return NextResponse.json(product);
+    return NextResponse.json(savedProduct);
   } catch {
     return NextResponse.json(
       {

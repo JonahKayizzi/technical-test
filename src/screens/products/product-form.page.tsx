@@ -1,15 +1,12 @@
+'use client'
+
 import React, { useState, useEffect } from 'react'
-import { useCreateProductMutation, useUpdateProductMutation } from '@/service/products.service'
+import { useCreateProductMutation, useUpdateProductMutation, type Product } from '@/service/products.service'
 import Input from '@/layout/input.layout'
 import Button from '@/layout/button.layout'
 
 interface ProductFormProps {
-  product?: {
-    id: string
-    name: string
-    amount: number
-    comment?: string
-  }
+  product?: Product
   onSuccess?: () => void
   onCancel?: () => void
 }
@@ -86,10 +83,13 @@ const ProductForm: React.FC<ProductFormProps> = ({
       }
 
       onSuccess?.()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to save product:', error)
+      const errorMessage = error && typeof error === 'object' && 'data' in error
+        ? (error.data as { error?: string })?.error || 'Failed to save product. Please try again.'
+        : 'Failed to save product. Please try again.'
       setErrors({
-        submit: error.data?.error || 'Failed to save product. Please try again.',
+        submit: errorMessage,
       })
     }
   }
@@ -99,7 +99,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   ) => {
     const { value } = e.target
     setFormData(prev => ({ ...prev, [field]: value }))
-    
+
     // Clear field error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }))

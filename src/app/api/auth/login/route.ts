@@ -24,9 +24,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // create session
+    // create session with consistent user ID based on email
     const user = {
-      id: `user_${Date.now()}`,
+      id: `user_${email.replace(/[^a-zA-Z0-9]/g, '_')}`,
       email,
     };
 

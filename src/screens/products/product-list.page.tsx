@@ -1,5 +1,7 @@
+'use client'
+
 import React, { useState } from 'react'
-import { useGetProductsQuery, useReorderProductsMutation, useDeleteProductMutation } from '@/service/products.service'
+import { useGetProductsQuery, useReorderProductsMutation, useDeleteProductMutation, type Product } from '@/service/products.service'
 import { useLogoutMutation } from '@/service/auth.service'
 import Card from '@/layout/card.layout'
 import Button from '@/layout/button.layout'
@@ -9,29 +11,35 @@ import ProductForm from './product-form.page'
 
 const ProductListPage: React.FC = () => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-    const [editingProduct, setEditingProduct] = useState<any>(null)
-    const [deleteProduct, setDeleteProduct] = useState<any>(null)
+    const [editingProduct, setEditingProduct] = useState<Product | undefined>(undefined)
+    const [deleteProduct, setDeleteProduct] = useState<Product | undefined>(undefined)
 
-    const { data: products = [], isLoading, error } = useGetProductsQuery()
+    const { data: products, isLoading, error } = useGetProductsQuery()
+    const productList = Array.isArray(products) ? products : []
     const [reorderProducts] = useReorderProductsMutation()
     const [deleteProductMutation] = useDeleteProductMutation()
     const [logout] = useLogoutMutation()
 
     const handleReorder = async (productId: string, direction: 'up' | 'down') => {
-        const currentIndex = products.findIndex(p => p.id === productId)
+        const currentIndex = productList.findIndex(p => p.id === productId)
         if (currentIndex === -1) return
 
         const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
-        if (newIndex < 0 || newIndex >= products.length) return
+        if (newIndex < 0 || newIndex >= productList.length) return
 
-        const newOrder = [...products]
+        const newOrder = [...productList]
         const [movedProduct] = newOrder.splice(currentIndex, 1)
         newOrder.splice(newIndex, 0, movedProduct)
 
         try {
             await reorderProducts({ productIds: newOrder.map(p => p.id) }).unwrap()
-        } catch (error) {
-            console.error('Failed to reorder products:', error)
+        } catch (error: unknown) {
+            const errorMessage = error && typeof error === 'object' && 'data' in error
+                ? (error.data as { error?: string })?.error
+                : error && typeof error === 'object' && 'message' in error
+                    ? (error as { message: string }).message
+                    : String(error)
+            console.error('Failed to reorder products:', errorMessage)
         }
     }
 
@@ -40,7 +48,7 @@ const ProductListPage: React.FC = () => {
 
         try {
             await deleteProductMutation(deleteProduct.id).unwrap()
-            setDeleteProduct(null)
+            setDeleteProduct(undefined)
         } catch (error) {
             console.error('Failed to delete product:', error)
         }
@@ -99,7 +107,7 @@ const ProductListPage: React.FC = () => {
 
             {/* Product List */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {products.length === 0 ? (
+                {productList.length === 0 ? (
                     <div className="text-center py-12">
                         <h3 className="text-lg font-medium text-gray-900 mb-2">
                             No products yet
@@ -113,7 +121,7 @@ const ProductListPage: React.FC = () => {
                     </div>
                 ) : (
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {products.map((product, index) => (
+                        {productList.map((product, index) => (
                             <Card
                                 key={product.id}
                                 id={product.id}
@@ -148,33 +156,33 @@ const ProductListPage: React.FC = () => {
             {/* Edit Product Modal */}
             <Modal
                 isOpen={!!editingProduct}
-                onClose={() => setEditingProduct(null)}
+                onClose={() => setEditingProduct(undefined)}
                 title="Edit Product"
                 size="lg"
             >
                 <ProductForm
                     product={editingProduct}
                     onSuccess={() => {
-                        setEditingProduct(null)
+                        setEditingProduct(undefined)
                     }}
-                    onCancel={() => setEditingProduct(null)}
+                    onCancel={() => setEditingProduct(undefined)}
                 />
             </Modal>
 
             {/* Delete Confirmation Modal */}
             <Modal
                 isOpen={!!deleteProduct}
-                onClose={() => setDeleteProduct(null)}
+                onClose={() => setDeleteProduct(undefined)}
                 title="Confirm Delete"
                 size="sm"
             >
                 <p className="text-gray-700 mb-4">
-                    Are you sure you want to delete "{deleteProduct?.name}"? This action cannot be undone.
+                    Are you sure you want to delete &quot;{deleteProduct?.name}&quot;? This action cannot be undone.
                 </p>
                 <div className="flex justify-end space-x-3">
                     <Button
                         variant="secondary"
-                        onClick={() => setDeleteProduct(null)}
+                        onClick={() => setDeleteProduct(undefined)}
                     >
                         Cancel
                     </Button>
