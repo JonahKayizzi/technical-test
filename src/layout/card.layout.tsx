@@ -1,23 +1,23 @@
-import React from 'react'
+import React from 'react';
 
 interface CardProps {
-  id: string
-  title: string
-  subtitle?: string
-  description?: string
-  amount?: number
-  children?: React.ReactNode
-  className?: string
-  loading?: boolean
-  error?: string
-  onEdit?: () => void
-  onDelete?: () => void
-  onReorder?: (direction: 'up' | 'down') => void
-  isEditing?: boolean
-  isDragging?: boolean
-  canEdit?: boolean
-  canDelete?: boolean
-  canReorder?: boolean
+  id: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  amount?: number;
+  children?: React.ReactNode;
+  className?: string;
+  loading?: boolean;
+  error?: string;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onReorder?: (direction: 'up' | 'down') => void;
+  isEditing?: boolean;
+  isDragging?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  canReorder?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -39,12 +39,13 @@ const Card: React.FC<CardProps> = ({
   canDelete = true,
   canReorder = true,
 }) => {
-  const baseClasses = 'bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200'
-  const draggingClasses = isDragging ? 'opacity-50 scale-95' : ''
-  const editingClasses = isEditing ? 'ring-2 ring-indigo-500' : ''
-  const errorClasses = error ? 'border-red-300 bg-red-50' : ''
-  
-  const classes = `${baseClasses} ${draggingClasses} ${editingClasses} ${errorClasses} ${className}`
+  const baseClasses =
+    'bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200';
+  const draggingClasses = isDragging ? 'opacity-50 scale-95' : '';
+  const editingClasses = isEditing ? 'ring-2 ring-indigo-500' : '';
+  const errorClasses = error ? 'border-red-300 bg-red-50' : '';
+
+  const classes = `${baseClasses} ${draggingClasses} ${editingClasses} ${errorClasses} ${className}`;
 
   return (
     <div
@@ -68,12 +69,10 @@ const Card: React.FC<CardProps> = ({
               {title}
             </h3>
             {subtitle && (
-              <p className="text-sm text-gray-500 mt-1">
-                {subtitle}
-              </p>
+              <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
             )}
           </div>
-          
+
           {/* Action Buttons */}
           <div className="flex items-center space-x-2 ml-4">
             {canReorder && onReorder && (
@@ -84,8 +83,18 @@ const Card: React.FC<CardProps> = ({
                   aria-label="Move up"
                   disabled={loading}
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 15l7-7 7 7"
+                    />
                   </svg>
                 </button>
                 <button
@@ -94,13 +103,23 @@ const Card: React.FC<CardProps> = ({
                   aria-label="Move down"
                   disabled={loading}
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
               </div>
             )}
-            
+
             {canEdit && onEdit && (
               <button
                 onClick={onEdit}
@@ -108,12 +127,22 @@ const Card: React.FC<CardProps> = ({
                 aria-label="Edit"
                 disabled={loading}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
                 </svg>
               </button>
             )}
-            
+
             {canDelete && onDelete && (
               <button
                 onClick={onDelete}
@@ -121,8 +150,18 @@ const Card: React.FC<CardProps> = ({
                 aria-label="Delete"
                 disabled={loading}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
                 </svg>
               </button>
             )}
@@ -132,12 +171,8 @@ const Card: React.FC<CardProps> = ({
 
       {/* Card Content */}
       <div className="p-4">
-        {description && (
-          <p className="text-gray-700 mb-3">
-            {description}
-          </p>
-        )}
-        
+        {description && <p className="text-gray-700 mb-3">{description}</p>}
+
         {amount !== undefined && (
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-gray-500">Amount:</span>
@@ -148,18 +183,12 @@ const Card: React.FC<CardProps> = ({
         )}
 
         {/* Custom Content */}
-        {children && (
-          <div className="mt-3">
-            {children}
-          </div>
-        )}
+        {children && <div className="mt-3">{children}</div>}
 
         {/* Error Message */}
         {error && (
           <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-sm text-red-600">
-              {error}
-            </p>
+            <p className="text-sm text-red-600">{error}</p>
           </div>
         )}
       </div>
@@ -169,13 +198,13 @@ const Card: React.FC<CardProps> = ({
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <div className="w-6 h-6 text-gray-400 cursor-grab active:cursor-grabbing">
             <svg fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM20 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM20 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM20 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+              <path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM20 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM20 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM20 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
             </svg>
           </div>
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Card
+export default Card;

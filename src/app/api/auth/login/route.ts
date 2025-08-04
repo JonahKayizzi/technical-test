@@ -13,7 +13,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
@@ -24,7 +23,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // create session with consistent user ID based on email
     const user = {
       id: `user_${email.replace(/[^a-zA-Z0-9]/g, '_')}`,
       email,
@@ -35,7 +33,6 @@ export async function POST(request: NextRequest) {
       token: `token_${Date.now()}`,
     });
 
-    // set cookie
     response.cookies.set('session', JSON.stringify(user), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

@@ -1,14 +1,18 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react'
-import { useCreateProductMutation, useUpdateProductMutation, type Product } from '@/service/products.service'
-import Input from '@/layout/input.layout'
-import Button from '@/layout/button.layout'
+import React, { useState, useEffect } from 'react';
+import {
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  type Product,
+} from '@/service/products.service';
+import Input from '@/layout/input.layout';
+import Button from '@/layout/button.layout';
 
 interface ProductFormProps {
-  product?: Product
-  onSuccess?: () => void
-  onCancel?: () => void
+  product?: Product;
+  onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({
@@ -20,14 +24,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
     name: '',
     amount: '',
     comment: '',
-  })
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const [createProduct, { isLoading: isCreating }] = useCreateProductMutation()
-  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation()
+  const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
 
-  const isLoading = isCreating || isUpdating
-  const isEditing = !!product
+  const isLoading = isCreating || isUpdating;
+  const isEditing = !!product;
 
   useEffect(() => {
     if (product) {
@@ -35,35 +39,35 @@ const ProductForm: React.FC<ProductFormProps> = ({
         name: product.name,
         amount: product.amount.toString(),
         comment: product.comment || '',
-      })
+      });
     }
-  }, [product])
+  }, [product]);
 
   const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Product name is required'
+      newErrors.name = 'Product name is required';
     }
 
     if (!formData.amount.trim()) {
-      newErrors.amount = 'Amount is required'
+      newErrors.amount = 'Amount is required';
     } else {
-      const amount = Number(formData.amount)
+      const amount = Number(formData.amount);
       if (isNaN(amount) || amount < 0) {
-        newErrors.amount = 'Amount must be a positive number'
+        newErrors.amount = 'Amount must be a positive number';
       }
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!validateForm()) {
-      return
+      return;
     }
 
     try {
@@ -71,40 +75,42 @@ const ProductForm: React.FC<ProductFormProps> = ({
         name: formData.name.trim(),
         amount: Number(formData.amount),
         comment: formData.comment.trim() || undefined,
-      }
+      };
 
       if (isEditing && product) {
         await updateProduct({
           id: product.id,
           ...productData,
-        }).unwrap()
+        }).unwrap();
       } else {
-        await createProduct(productData).unwrap()
+        await createProduct(productData).unwrap();
       }
 
-      onSuccess?.()
+      onSuccess?.();
     } catch (error: unknown) {
-      console.error('Failed to save product:', error)
-      const errorMessage = error && typeof error === 'object' && 'data' in error
-        ? (error.data as { error?: string })?.error || 'Failed to save product. Please try again.'
-        : 'Failed to save product. Please try again.'
+      console.error('Failed to save product:', error);
+      const errorMessage =
+        error && typeof error === 'object' && 'data' in error
+          ? (error.data as { error?: string })?.error ||
+            'Failed to save product. Please try again.'
+          : 'Failed to save product. Please try again.';
       setErrors({
         submit: errorMessage,
-      })
+      });
     }
-  }
+  };
 
-  const handleInputChange = (field: string) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { value } = e.target
-    setFormData(prev => ({ ...prev, [field]: value }))
+  const handleInputChange =
+    (field: string) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { value } = e.target;
+      setFormData(prev => ({ ...prev, [field]: value }));
 
-    // Clear field error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }))
-    }
-  }
+      // Clear field error when user starts typing
+      if (errors[field]) {
+        setErrors(prev => ({ ...prev, [field]: '' }));
+      }
+    };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -134,12 +140,12 @@ const ProductForm: React.FC<ProductFormProps> = ({
         required
         disabled={isLoading}
         validation={{
-          custom: (value) => {
-            const num = Number(value)
-            if (num < 0) return 'Amount cannot be negative'
-            if (num > 1000000) return 'Amount cannot exceed 1,000,000'
-            return null
-          }
+          custom: value => {
+            const num = Number(value);
+            if (num < 0) return 'Amount cannot be negative';
+            if (num > 1000000) return 'Amount cannot exceed 1,000,000';
+            return null;
+          },
         }}
       />
 
@@ -173,15 +179,16 @@ const ProductForm: React.FC<ProductFormProps> = ({
         >
           Cancel
         </Button>
-        <Button
-          type="submit"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Saving...' : isEditing ? 'Update Product' : 'Add Product'}
+        <Button type="submit" disabled={isLoading}>
+          {isLoading
+            ? 'Saving...'
+            : isEditing
+              ? 'Update Product'
+              : 'Add Product'}
         </Button>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default ProductForm 
+export default ProductForm;

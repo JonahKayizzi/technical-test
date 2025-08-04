@@ -1,17 +1,17 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react';
 
 interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title?: string
-  children: React.ReactNode
-  size?: 'sm' | 'md' | 'lg' | 'xl'
-  showCloseButton?: boolean
-  closeOnBackdropClick?: boolean
-  closeOnEscape?: boolean
-  loading?: boolean
-  className?: string
-  footer?: React.ReactNode
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  children: React.ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  showCloseButton?: boolean;
+  closeOnBackdropClick?: boolean;
+  closeOnEscape?: boolean;
+  loading?: boolean;
+  className?: string;
+  footer?: React.ReactNode;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -27,8 +27,8 @@ const Modal: React.FC<ModalProps> = ({
   className = '',
   footer,
 }) => {
-  const modalRef = useRef<HTMLDivElement>(null)
-  const overlayRef = useRef<HTMLDivElement>(null)
+  const modalRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   // Size classes
   const sizeClasses = {
@@ -36,70 +36,72 @@ const Modal: React.FC<ModalProps> = ({
     md: 'max-w-md',
     lg: 'max-w-lg',
     xl: 'max-w-xl',
-  }
+  };
 
   // Handle escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && closeOnEscape) {
-        onClose()
+        onClose();
       }
-    }
+    };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape)
+      document.addEventListener('keydown', handleEscape);
       // Prevent body scroll when modal is open
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden';
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen, onClose, closeOnEscape])
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose, closeOnEscape]);
 
   // Focus trap
   useEffect(() => {
     if (isOpen && modalRef.current) {
       const focusableElements = modalRef.current.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      )
-      const firstElement = focusableElements[0] as HTMLElement
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
+      );
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[
+        focusableElements.length - 1
+      ] as HTMLElement;
 
       if (firstElement) {
-        firstElement.focus()
+        firstElement.focus();
       }
 
       const handleTabKey = (event: KeyboardEvent) => {
         if (event.key === 'Tab') {
           if (event.shiftKey) {
             if (document.activeElement === firstElement) {
-              event.preventDefault()
-              lastElement.focus()
+              event.preventDefault();
+              lastElement.focus();
             }
           } else {
             if (document.activeElement === lastElement) {
-              event.preventDefault()
-              firstElement.focus()
+              event.preventDefault();
+              firstElement.focus();
             }
           }
         }
-      }
+      };
 
-      document.addEventListener('keydown', handleTabKey)
-      return () => document.removeEventListener('keydown', handleTabKey)
+      document.addEventListener('keydown', handleTabKey);
+      return () => document.removeEventListener('keydown', handleTabKey);
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   // Handle backdrop click
   const handleBackdropClick = (event: React.MouseEvent) => {
     if (event.target === overlayRef.current && closeOnBackdropClick) {
-      onClose()
+      onClose();
     }
-  }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div
@@ -113,7 +115,7 @@ const Modal: React.FC<ModalProps> = ({
     >
       {/* Backdrop */}
       <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity" />
-      
+
       {/* Modal Container */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div
@@ -146,8 +148,18 @@ const Modal: React.FC<ModalProps> = ({
                   aria-label="Close modal"
                   disabled={loading}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               )}
@@ -168,7 +180,7 @@ const Modal: React.FC<ModalProps> = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Modal
+export default Modal;
