@@ -91,19 +91,17 @@
 - **🔐 Email-based Authentication** - Simple login with email only
 - **📝 Product Management** - Add, edit, delete products with validation
 - **🔄 Reorder Products** - Drag and drop functionality for product reordering
-- **💾 Persistent Storage** - File-based storage that survives server restarts
+- **💾 In-Memory Storage** - Optimized for Netlify deployment (data resets on server restart)
 - **📱 Responsive Design** - Works seamlessly on desktop and mobile
 - **🧪 Comprehensive Testing** - 136+ tests covering components and API
 - **⚡ Real-time Updates** - RTK Query for efficient data fetching and caching
 - **🎨 Modern UI** - Clean, accessible interface with Tailwind CSS
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### 🚀 Live Demo <a name="live-demo"></a>
 
-<!-- LIVE DEMO -->
+**Production Deployment**: [https://tianlu-product-list.netlify.app/](https://tianlu-product-list.netlify.app/)
 
-## 🚀 Live Demo
-
-[Live Demo here.](https://your-demo-link.com)
+> **Note**: This deployment branch uses in-memory storage for Netlify compatibility. Data will not persist between server restarts. For persistent storage, use the main development branch.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

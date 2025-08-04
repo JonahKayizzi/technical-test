@@ -1,6 +1,3 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-
 interface Product {
   id: string;
   name: string;
@@ -11,30 +8,15 @@ interface Product {
   updatedAt: string;
 }
 
-const STORAGE_FILE = path.join(process.cwd(), 'data', 'products.json');
-
-async function ensureDataDir() {
-  const dataDir = path.dirname(STORAGE_FILE);
-  try {
-    await fs.access(dataDir);
-  } catch {
-    await fs.mkdir(dataDir, { recursive: true });
-  }
-}
+// In-memory storage for Netlify compatibility
+let productsStorage: Product[] = [];
 
 export async function readProducts(): Promise<Product[]> {
-  try {
-    await ensureDataDir();
-    const data = await fs.readFile(STORAGE_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
+  return productsStorage;
 }
 
 export async function writeProducts(products: Product[]): Promise<void> {
-  await ensureDataDir();
-  await fs.writeFile(STORAGE_FILE, JSON.stringify(products, null, 2));
+  productsStorage = products;
 }
 
 export async function getUserProducts(userId: string): Promise<Product[]> {
