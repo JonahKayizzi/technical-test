@@ -106,7 +106,6 @@
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 The project team members are:
 
 @jonahkayizzi
@@ -262,6 +261,5 @@ If you like this project you can give me a ⭐️
 <!-- LICENSE -->
 
 ## 📝 License <a name="license"></a>
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
