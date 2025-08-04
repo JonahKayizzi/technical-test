@@ -12,25 +12,26 @@
 
 # 📗 Table of Contents
 
-- [📖 About the Project](#about-project)
-  - [🛠 Built With](#built-with)
-    - [Tech Stack](#tech-stack)
-    - [Key Features](#key-features)
-  - [🚀 Live Demo](#live-demo)
-- [Kanban Board](#kanban-board)
-- [💻 Getting Started](#getting-started)
-  - [Setup](#setup)
-  - [Prerequisites](#prerequisites)
-  - [Install](#install)
-  - [Usage](#usage)
-  - [Run tests](#run-tests)
-  - [Deployment](#triangular_flag_on_post-deployment)
-- [👥 Authors](#authors)
-- [🔭 Future Features](#future-features)
-- [🤝 Contributing](#contributing)
-- [⭐️ Show your support](#support)
-- [🙏 Acknowledgements](#acknowledgements)
-- [📝 License](#license)
+- [📗 Table of Contents](#-table-of-contents)
+- [📖 Product List Management App ](#-product-list-management-app-)
+  - [🛠 Built With ](#-built-with-)
+    - [Tech Stack ](#tech-stack-)
+    - [Key Features ](#key-features-)
+    - [🚀 Live Demo ](#-live-demo-)
+  - [Product List Management App](#product-list-management-app)
+  - [💻 Getting Started ](#-getting-started-)
+    - [Prerequisites](#prerequisites)
+    - [Setup](#setup)
+    - [Install](#install)
+    - [Usage](#usage)
+    - [Run tests](#run-tests)
+    - [Available Scripts](#available-scripts)
+    - [Deployment](#deployment)
+  - [👥 Authors ](#-authors-)
+  - [🤝 Contributing ](#-contributing-)
+  - [⭐️ Show your support ](#️-show-your-support-)
+  - [🙏 Acknowledgments ](#-acknowledgments-)
+  - [📝 License ](#-license-)
 
 <!-- PROJECT DESCRIPTION -->
 
@@ -91,35 +92,28 @@
 - **🔐 Email-based Authentication** - Simple login with email only
 - **📝 Product Management** - Add, edit, delete products with validation
 - **🔄 Reorder Products** - Drag and drop functionality for product reordering
-- **💾 Persistent Storage** - File-based storage that survives server restarts
+- **💾 File-based Storage** - Persistent storage that survives server restarts (local development)
 - **📱 Responsive Design** - Works seamlessly on desktop and mobile
 - **🧪 Comprehensive Testing** - 136+ tests covering components and API
 - **⚡ Real-time Updates** - RTK Query for efficient data fetching and caching
 - **🎨 Modern UI** - Clean, accessible interface with Tailwind CSS
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### 🚀 Live Demo <a name="live-demo"></a>
 
-<!-- LIVE DEMO -->
+**Production Deployment**: [https://tianlu-product-list.netlify.app/](https://tianlu-product-list.netlify.app/)
 
-## 🚀 Live Demo
-
-[Live Demo here.](https://your-demo-link.com)
+> **Note**: The production deployment uses in-memory storage for Netlify compatibility. Data will not persist between server restarts on the deployed version. For persistent storage, use the local development version.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Kanban board <a name="kanban-board"></a>
-
-See the kanban board [here](https://github.com/your-username/your-repo/projects/1).
-
-[Image of the board's initial state](https://user-images.githubusercontent.com/103001263/224076428-fe979417-46c0-4031-b52a-6fb24fa9d7ac.png).
 
 The project team members are:
 
-@your-username
+@jonahkayizzi
 
 ## Product List Management App
 
-[Repository Link](https://github.com/your-username/product-list-app.git)
+[Repository Link](https://github.com/JonahKayizzi/technical-test.git)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -145,7 +139,7 @@ Clone this repository to your desired folder:
 
 ```sh
   cd my-folder
-  git clone https://github.com/your-username/product-list-app.git
+  git clone https://github.com/JonahKayizzi/technical-test.git
   cd product-list-app
 ```
 
@@ -227,11 +221,11 @@ For deployment platforms like Vercel, Netlify, or Railway, the build process is 
 
 ## 👥 Authors <a name="authors"></a>
 
-👤 **Your Name**
+👤 **Jonathan Kayizzi**
 
-- GitHub: [@your-username](https://github.com/your-username)
-- Twitter: [@your-twitter](https://twitter.com/your-twitter)
-- LinkedIn: [@your-linkedin](https://www.linkedin.com/in/your-linkedin/)
+- GitHub: [@your-username](https://github.com/JonahKayizzi)
+- Twitter: [@your-twitter](https://twitter.com/JonahKayizzi)
+- LinkedIn: [@your-linkedin](https://www.linkedin.com/in/jonathan-kayizzi/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -241,7 +235,7 @@ For deployment platforms like Vercel, Netlify, or Railway, the build process is 
 
 Contributions, issues, and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/your-username/product-list-app/issues).
+Feel free to check the [issues page](https://github.com/JonahKayizzi/technical-test/issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -269,6 +263,5 @@ If you like this project you can give me a ⭐️
 
 ## 📝 License <a name="license"></a>
 
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
