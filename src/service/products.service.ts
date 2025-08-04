@@ -1,10 +1,10 @@
 import { api } from './api';
 
-interface Product {
+export interface Product {
   id: string;
   name: string;
   amount: number;
-  comment: string;
+  comment?: string;
   userId: string;
   createdAt: string;
   updatedAt: string;
@@ -13,14 +13,14 @@ interface Product {
 interface CreateProductRequest {
   name: string;
   amount: number;
-  comment: string;
+  comment?: string;
 }
 
 interface UpdateProductRequest {
   id: string;
   name?: string;
-  amount: number;
-  comment: string;
+  amount?: number;
+  comment?: string;
 }
 
 interface ReorderProductsRequest {

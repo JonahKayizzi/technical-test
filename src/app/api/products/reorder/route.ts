@@ -1,16 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-interface Product {
-  id: string;
-  name: string;
-  amount: number;
-  comment: string;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const products: Product[] = [];
+import { reorderProducts } from '@/lib/storage';
 
 export async function PUT(request: NextRequest) {
   try {
@@ -26,7 +15,9 @@ export async function PUT(request: NextRequest) {
     }
 
     const user = JSON.parse(session.value);
-    const { productIds } = await request.json();
+    const body = await request.json();
+
+    const productIds = body.productIds || body.data?.productIds;
 
     if (!Array.isArray(productIds)) {
       return NextResponse.json(
@@ -37,15 +28,9 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const userProducts = products.filter(p => p.userId === user.id);
+    const success = await reorderProducts(user.id, productIds);
 
-    // verify all productIds belong to the user
-    const validProductIds = userProducts.map(p => p.id);
-    const allValid = productIds.every((id: string) =>
-      validProductIds.includes(id)
-    );
-
-    if (!allValid) {
+    if (!success) {
       return NextResponse.json(
         {
           error: 'Invalid productIds',
@@ -53,15 +38,6 @@ export async function PUT(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    // reorder products
-    const reorderedProducts = productIds
-      .map(id => userProducts.find(p => p.id === id))
-      .filter(Boolean);
-
-    // update products
-    const otherProducts = products.filter(p => p.userId !== user.id);
-    const updatedProducts = [...otherProducts, ...reorderedProducts];
 
     return NextResponse.json({ success: true });
   } catch {

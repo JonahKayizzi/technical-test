@@ -1,20 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-interface Product {
-  id: string;
-  name: string;
-  amount: number;
-  comment: string;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const products: Product[] = [];
+import { updateProduct, deleteProduct } from '@/lib/storage';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = request.cookies.get('session');
@@ -30,12 +19,15 @@ export async function PUT(
 
     const user = JSON.parse(session.value);
     const { name, amount, comment } = await request.json();
+    const { id } = await params;
 
-    const productIndex = products.findIndex(
-      p => p.id === params.id && p.userId === user.id
-    );
+    const updatedProduct = await updateProduct(id, {
+      name,
+      amount,
+      comment,
+    });
 
-    if (productIndex === -1) {
+    if (!updatedProduct) {
       return NextResponse.json(
         {
           error: 'Product not found',
@@ -44,15 +36,7 @@ export async function PUT(
       );
     }
 
-    products[productIndex] = {
-      ...products[productIndex],
-      name: name || products[productIndex].name,
-      amount: amount || products[productIndex].amount,
-      comment: comment || products[productIndex].comment,
-      updatedAt: new Date().toISOString(),
-    };
-
-    return NextResponse.json(products[productIndex]);
+    return NextResponse.json(updatedProduct);
   } catch {
     return NextResponse.json(
       {
@@ -65,7 +49,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = request.cookies.get('session');
@@ -80,11 +64,10 @@ export async function DELETE(
     }
 
     const user = JSON.parse(session.value);
-    const productIndex = products.findIndex(
-      p => p.id === params.id && p.userId === user.id
-    );
+    const { id } = await params;
+    const success = await deleteProduct(id);
 
-    if (productIndex === -1) {
+    if (!success) {
       return NextResponse.json(
         {
           error: 'Product not found',
@@ -92,8 +75,6 @@ export async function DELETE(
         { status: 404 }
       );
     }
-
-    products.splice(productIndex, 1);
 
     return NextResponse.json({ success: true });
   } catch {

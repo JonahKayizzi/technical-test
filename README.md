@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧪 Product List App - Technical Test
+
+A fullstack Next.js application for managing personal product lists with email-based authentication.
 
 ## Getting Started
 
