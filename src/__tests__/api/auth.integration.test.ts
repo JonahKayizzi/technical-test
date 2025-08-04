@@ -15,7 +15,9 @@ const mockServer = {
 
 // Mock the API handlers
 jest.mock('@/app/api/auth/login/route', () => ({
-  POST: async (request: NextRequest): Promise<{ status: number; json: () => Promise<unknown> }> => {
+  POST: async (
+    request: NextRequest
+  ): Promise<{ status: number; json: () => Promise<unknown> }> => {
     try {
       const body = await request.json();
       const { email } = body as { email?: string };
@@ -54,7 +56,11 @@ jest.mock('@/app/api/auth/login/route', () => ({
 }));
 
 jest.mock('@/app/api/auth/logout/route', () => ({
-  POST: async (): Promise<{ status: number; json: () => Promise<{ success: boolean }>; cookies: { set: jest.Mock } }> => {
+  POST: async (): Promise<{
+    status: number;
+    json: () => Promise<{ success: boolean }>;
+    cookies: { set: jest.Mock };
+  }> => {
     return {
       status: 200,
       json: async () => ({ success: true }),
@@ -66,7 +72,9 @@ jest.mock('@/app/api/auth/logout/route', () => ({
 }));
 
 jest.mock('@/app/api/auth/verify/route', () => ({
-  GET: async (request: NextRequest): Promise<{ status: number; json: () => Promise<unknown> }> => {
+  GET: async (
+    request: NextRequest
+  ): Promise<{ status: number; json: () => Promise<unknown> }> => {
     try {
       const session = request.cookies.get('session');
       if (!session) {
@@ -96,7 +104,11 @@ describe('Authentication API Integration', () => {
     return {
       json: jest.fn().mockResolvedValue(body || {}),
       cookies: {
-        get: jest.fn().mockReturnValue(cookies ? { value: JSON.stringify(cookies) } : undefined),
+        get: jest
+          .fn()
+          .mockReturnValue(
+            cookies ? { value: JSON.stringify(cookies) } : undefined
+          ),
       },
     } as unknown as NextRequest;
   };
@@ -139,13 +151,13 @@ describe('Authentication API Integration', () => {
     it('should generate consistent user ID for same email', async () => {
       const request1 = createMockRequest({ email: 'test@example.com' });
       const request2 = createMockRequest({ email: 'test@example.com' });
-      
+
       const response1 = await loginHandler(request1);
       const response2 = await loginHandler(request2);
-      
+
       const data1 = await response1.json();
       const data2 = await response2.json();
-      
+
       expect(data1.user.id).toBe(data2.user.id);
     });
   });
